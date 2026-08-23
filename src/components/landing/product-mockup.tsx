@@ -44,9 +44,9 @@ export function ProductMockup() {
             ))}
           </div>
           <span className="text-xs font-medium text-muted-foreground">+3</span>
-          <button className="ml-2 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground">
+          <span className="ml-2 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground">
             Share
-          </button>
+          </span>
         </div>
       </div>
 

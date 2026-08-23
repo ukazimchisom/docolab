@@ -36,7 +36,7 @@ export function FinalCTA() {
             >
               <Link href="/signup">Start Collaborating Free</Link>
             </Button>
-            <p className="text-xs text-primary-foreground/70">
+            <p className="text-xs text-primary-foreground/85">
               No credit card required · Set up in under 2 minutes
             </p>
           </div>
