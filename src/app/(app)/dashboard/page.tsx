@@ -1,7 +1,9 @@
+import { IconRail } from "@/components/app/icon-rail";
+
 export default function DashboardPage() {
   return (
-    <main>
-      <h1>Dashboard (placeholder)</h1>
-    </main>
+    <div className="flex h-screen">
+      <IconRail />
+    </div>
   );
 }
