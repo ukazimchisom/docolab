@@ -23,7 +23,7 @@ const TESTIMONIALS: Testimonial[] = [
     name: "Daniel Okafor",
     role: "Operations Manager, CloudLabs",
     initials: "DO",
-    avatarColor: "bg-emerald-600",
+    avatarColor: "bg-emerald-700",
   },
   {
     quote:
@@ -31,7 +31,7 @@ const TESTIMONIALS: Testimonial[] = [
     name: "Sofia Martins",
     role: "Design Director, PixelForge",
     initials: "SM",
-    avatarColor: "bg-amber-600",
+    avatarColor: "bg-amber-700",
   },
 ];
 
