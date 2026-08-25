@@ -3,33 +3,18 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  HouseIcon,
-  FileTextIcon,
-  ClockCounterClockwiseIcon,
-  ChartBarIcon,
-  SparkleIcon,
-  type Icon,
-} from "@phosphor-icons/react";
-import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { NAV_ITEMS } from "@/lib/mock-data";
-
-const ICON_MAP: Record<string, Icon> = {
-  House: HouseIcon,
-  FileText: FileTextIcon,
-  ClockCounterClockwise: ClockCounterClockwiseIcon,
-  ChartBar: ChartBarIcon,
-  Sparkle: SparkleIcon,
-};
+import { ICON_MAP } from "./icon-map";
 
 export function IconRail() {
   const pathname = usePathname();
 
   return (
-    <aside className="flex h-full w-16 flex-col items-center border-r border-sidebar-border bg-sidebar py-4">
+    <aside className="hidden h-full w-16 flex-col items-center border-r border-sidebar-border bg-sidebar py-4 md:flex">
       {/* Workspace switcher */}
       <Link
         href="/dashboard"
