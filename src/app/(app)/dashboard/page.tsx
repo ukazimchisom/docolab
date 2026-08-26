@@ -1,6 +1,7 @@
 import { DashboardHeader } from "@/components/app/dashboard-header";
 import { QuickActions } from "@/components/app/quick-actions";
 import { RecentDocuments } from "@/components/app/recent-documents";
+import { AllDocuments } from "@/components/app/all-documents";
 
 export default function DashboardPage() {
   return (
@@ -8,6 +9,7 @@ export default function DashboardPage() {
       <DashboardHeader />
       <QuickActions />
       <RecentDocuments />
+      <AllDocuments />
     </div>
   );
 }
