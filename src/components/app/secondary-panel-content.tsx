@@ -29,7 +29,7 @@ export function SecondaryPanelContent() {
   const [foldersOpen, setFoldersOpen] = useState(true);
 
   return (
-    <div className="flex h-full flex-col overflow-y-auto px-3 py-5">
+    <div className="flex h- flex-col overflow-y-auto px-3 py-5">
       <h2 className="px-2 text-lg font-semibold text-sidebar-foreground">
         Documents
       </h2>
