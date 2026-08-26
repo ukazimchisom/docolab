@@ -15,7 +15,7 @@ export function AllDocuments() {
   return (
     <div>
       <div className="flex items-center justify-between">
-        <h2 className="text-base font-semibold text-foreground">
+        <h2 className="text-base text-[12px] font-semibold text-foreground">
           All Documents{" "}
           <span className="text-muted-foreground font-normal">
             ({DOCUMENTS.length})

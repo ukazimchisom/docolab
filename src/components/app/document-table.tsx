@@ -35,7 +35,7 @@ export function DocumentTable({ documents }: { documents: DocumentItem[] }) {
               <td className="px-4 py-3">
                 <Link
                   href={`/documents/${doc.id}`}
-                  className="font-medium text-foreground hover:text-primary hover:underline"
+                  className="font-medium text-[12px] text-foreground hover:text-primary hover:underline"
                 >
                   {doc.title}
                 </Link>
@@ -49,12 +49,12 @@ export function DocumentTable({ documents }: { documents: DocumentItem[] }) {
                       {doc.owner.initials}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="text-muted-foreground">
+                  <span className="text-muted-foreground text-[10px]">
                     {doc.owner.name}
                   </span>
                 </div>
               </td>
-              <td className="px-4 py-3 text-muted-foreground">
+              <td className="px-4 py-3 text-muted-foreground text-[10px]">
                 {doc.lastEditedAt}
               </td>
               <td className="px-4 py-3">

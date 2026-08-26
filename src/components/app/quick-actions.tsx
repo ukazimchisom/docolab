@@ -54,10 +54,10 @@ export function QuickActions() {
             <action.icon size={18} className="text-primary" />
           </div>
           <div className="min-w-0">
-            <p className="truncate text-sm font-medium text-foreground">
+            <p className="truncate text-[11px] font-medium text-foreground">
               {action.label}
             </p>
-            <p className="truncate text-xs text-muted-foreground">
+            <p className="truncate text-[10px] text-muted-foreground">
               {action.description}
             </p>
           </div>

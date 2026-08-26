@@ -13,13 +13,13 @@ export function DocumentGrid({ documents }: { documents: DocumentItem[] }) {
           className="flex flex-col rounded-xl border border-border bg-card p-4 transition-colors hover:border-primary/40"
         >
           <div className="flex items-start justify-between gap-2">
-            <span className="inline-block rounded bg-accent px-2 py-0.5 text-xs font-medium text-primary">
+            <span className="inline-block rounded bg-accent px-2 py-0.5 text-[10px] font-medium text-primary">
               {doc.category}
             </span>
             <StatusBadge status={doc.status} />
           </div>
 
-          <h3 className="mt-3 truncate text-sm font-semibold text-foreground">
+          <h3 className="mt-3 truncate text-[11px] font-semibold text-foreground">
             {doc.title}
           </h3>
 
@@ -32,7 +32,7 @@ export function DocumentGrid({ documents }: { documents: DocumentItem[] }) {
                   {doc.owner.initials}
                 </AvatarFallback>
               </Avatar>
-              <span className="text-xs text-muted-foreground">
+              <span className="text-[10px] text-muted-foreground">
                 {doc.lastEditedAt}
               </span>
             </div>

@@ -27,7 +27,7 @@ export function StatusBadge({ status }: { status: DocumentStatus }) {
 
   return (
     <span
-      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${config.className}`}
+      className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-[7px] font-medium ${config.className}`}
     >
       {config.label}
     </span>

@@ -108,3 +108,51 @@ export const NAV_ITEMS: NavItem[] = [
   { id: "analytics", label: "Analytics", href: "/analytics", icon: "ChartBar" },
   { id: "ai", label: "AI Assistant", href: "/ai", icon: "Sparkle" },
 ];
+
+export interface StorageBreakdownItem {
+  label: string;
+  usedGb: number;
+  color: string;
+}
+
+export const STORAGE_STATS = {
+  usedGb: 4.1,
+  totalGb: 5,
+  breakdown: [
+    { label: "Documents", usedGb: 2.8, color: "text-primary" },
+    { label: "Attachments", usedGb: 0.6, color: "text-amber-600" },
+    { label: "Exports", usedGb: 0.7, color: "text-emerald-600" },
+  ] as StorageBreakdownItem[],
+};
+
+export interface ActivityItem {
+  id: string;
+  actor: Collaborator;
+  action: string;
+  target: string;
+  timestamp: string;
+}
+
+export const ACTIVITY_ITEMS: ActivityItem[] = [
+  {
+    id: "a1",
+    actor: COLLABORATORS[2],
+    action: "commented on",
+    target: "Marketing Strategy Draft",
+    timestamp: "1h ago",
+  },
+  {
+    id: "a2",
+    actor: COLLABORATORS[1],
+    action: "created a new document",
+    target: "Customer Research Notes",
+    timestamp: "1h ago",
+  },
+  {
+    id: "a3",
+    actor: COLLABORATORS[3],
+    action: "attached a file to",
+    target: "Client Presentation Prep",
+    timestamp: "1h ago",
+  },
+];

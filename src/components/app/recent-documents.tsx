@@ -8,12 +8,12 @@ export function RecentDocuments() {
   return (
     <div>
       <div className="flex items-center justify-between">
-        <h2 className="text-base font-semibold text-foreground">
+        <h2 className="text-[12px] font-semibold text-foreground">
           Recent Documents
         </h2>
         <Link
           href="/documents"
-          className="text-sm font-medium text-primary hover:underline"
+          className="text-[10px] font-medium text-primary hover:underline"
         >
           View all
         </Link>
@@ -26,11 +26,11 @@ export function RecentDocuments() {
             href={`/documents/${doc.id}`}
             className="rounded-xl border border-border bg-card p-4 transition-colors hover:border-primary/40"
           >
-            <span className="inline-block rounded bg-accent px-2 py-0.5 text-xs font-medium text-primary">
+            <span className="inline-block rounded bg-accent px-2 py-0.5 text-[10px] font-medium text-primary">
               {doc.category}
             </span>
 
-            <h3 className="mt-3 truncate text-sm font-semibold text-foreground">
+            <h3 className="mt-3 truncate text-[11px] font-semibold text-foreground">
               {doc.title}
             </h3>
 
@@ -42,7 +42,7 @@ export function RecentDocuments() {
                   {doc.owner.initials}
                 </AvatarFallback>
               </Avatar>
-              <span className="text-xs text-muted-foreground">
+              <span className="text-[10px] text-muted-foreground">
                 {doc.owner.name.split(" ")[0]} · {doc.lastEditedAt}
               </span>
             </div>
