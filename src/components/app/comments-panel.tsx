@@ -40,7 +40,7 @@ export function CommentsPanel() {
   }
 
   return (
-    <aside className="flex h-full w-full flex-col border-l border-border lg:w-80">
+    <aside className="flex w-full flex-col border-t border-border lg:h-full lg:w-80 lg:border-l lg:border-t-0">
       <div className="flex items-center justify-between border-b border-border px-4 py-3.5">
         <h2 className="text-sm font-semibold text-foreground">
           Comments{" "}
@@ -50,7 +50,7 @@ export function CommentsPanel() {
         </h2>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 py-4">
+      <div className="px-4 py-4 lg:flex-1 lg:overflow-y-auto">
         <div className="flex flex-col gap-5">
           {comments.map((comment) => (
             <CommentItem key={comment.id} comment={comment} />

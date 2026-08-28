@@ -17,8 +17,8 @@ export default async function DocumentPage({ params }: DocumentPageProps) {
   }
 
   return (
-    <div className="flex h-full flex-col lg:flex-row">
-      <div className="flex-1 overflow-y-auto p-6">
+    <div className="flex flex-col lg:h-full lg:flex-row">
+      <div className="p-6 lg:flex-1 lg:overflow-y-auto">
         <DocumentBreadcrumb document={document} />
         <div className="mt-4">
           <DocumentContent document={document} />
