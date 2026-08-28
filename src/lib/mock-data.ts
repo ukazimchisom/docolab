@@ -8,6 +8,7 @@ import type {
   DocumentItem,
   Folder,
   NavItem,
+  Comment,
 } from "@/types/document";
 
 export const COLLABORATORS: Collaborator[] = [
@@ -156,3 +157,34 @@ export const ACTIVITY_ITEMS: ActivityItem[] = [
     timestamp: "1h ago",
   },
 ];
+export const COMMENTS: Comment[] = [
+  {
+    id: "c1",
+    author: COLLABORATORS[3],
+    content:
+      "Maybe we should add a section explaining how the AI suggestions actually work under the hood.",
+    timestamp: "2h ago",
+    replyCount: 1,
+  },
+  {
+    id: "c2",
+    author: COLLABORATORS[1],
+    content:
+      "The introduction is clear, but it might help to add a short real-world example.",
+    timestamp: "5h ago",
+  },
+  {
+    id: "c3",
+    author: COLLABORATORS[3],
+    content: "Should we include a comparison with external AI writing tools?",
+    timestamp: "8h ago",
+    reactions: [
+      { emoji: "👍", count: 4 },
+      { emoji: "👀", count: 2 },
+    ],
+  },
+];
+
+export function getDocumentById(id: string): DocumentItem | undefined {
+  return DOCUMENTS.find((doc) => doc.id === id);
+}

@@ -30,3 +30,12 @@ export interface NavItem {
   href: string;
   icon: string;
 }
+
+export interface Comment {
+  id: string;
+  author: Collaborator;
+  content: string;
+  timestamp: string;
+  replyCount?: number;
+  reactions?: { emoji: string; count: number }[];
+}
