@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   MagnifyingGlassIcon,
@@ -22,20 +21,20 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SecondaryPanelMobile } from "./secondary-panel-mobile";
+import { logout } from "@/app/(auth)/actions";
 
-const CURRENT_USER = {
-  name: "frank anderson",
-  email: "andy@docolab.com",
-  initials: "AR",
-};
+interface TopBarUser {
+  name: string;
+  email: string;
+  initials: string;
+}
 
-export function TopBar() {
-  const [shortcutKey, setShortcutKey] = useState("Ctrl");
+export function TopBar({ user }: { user: TopBarUser }) {
+  const isMac =
+    typeof navigator !== "undefined" &&
+    navigator.platform.toUpperCase().includes("MAC");
 
-  useEffect(() => {
-    const isMac = navigator.platform.toUpperCase().includes("MAC");
-    setShortcutKey(isMac ? "⌘" : "Ctrl");
-  }, []);
+  const shortcutKey = isMac ? "⌘" : "Ctrl";
 
   return (
     <header className="flex h-16 items-center gap-3 border-b border-border bg-background px-4 lg:px-6">
@@ -76,18 +75,16 @@ export function TopBar() {
             >
               <Avatar className="h-9 w-9">
                 <AvatarFallback className="bg-primary text-xs text-primary-foreground">
-                  {CURRENT_USER.initials}
+                  {user.initials}
                 </AvatarFallback>
               </Avatar>
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>
-              <p className="text-sm font-medium text-foreground">
-                {CURRENT_USER.name}
-              </p>
+              <p className="text-sm font-medium text-foreground">{user.name}</p>
               <p className="text-xs font-normal text-muted-foreground">
-                {CURRENT_USER.email}
+                {user.email}
               </p>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
@@ -104,9 +101,16 @@ export function TopBar() {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive">
-              <SignOutIcon size={16} />
-              Log out
+            <DropdownMenuItem variant="destructive" asChild>
+              <form action={logout} className="w-full">
+                <button
+                  type="submit"
+                  className="flex w-full items-center gap-2"
+                >
+                  <SignOutIcon size={16} />
+                  Log out
+                </button>
+              </form>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

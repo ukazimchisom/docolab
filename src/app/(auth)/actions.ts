@@ -69,3 +69,9 @@ export async function signup(input: unknown) {
 
   redirect("/signup/confirm-email");
 }
+
+export async function logout() {
+  const supabase = await createClient();
+  await supabase.auth.signOut();
+  redirect("/login");
+}
