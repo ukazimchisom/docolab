@@ -5,20 +5,20 @@ import { SquaresFourIcon, ListIcon } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { DocumentGrid } from "./document-grid";
 import { DocumentTable } from "./document-table";
-import { DOCUMENTS } from "@/lib/mock-data";
+import type { DocumentItem } from "@/types/document";
 
 type ViewMode = "grid" | "table";
 
-export function AllDocuments() {
+export function AllDocuments({ documents }: { documents: DocumentItem[] }) {
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
 
   return (
     <div>
       <div className="flex items-center justify-between">
-        <h2 className="text-base text-[12px] font-semibold text-foreground">
+        <h2 className="text-base font-semibold text-foreground">
           All Documents{" "}
           <span className="text-muted-foreground font-normal">
-            ({DOCUMENTS.length})
+            ({documents.length})
           </span>
         </h2>
 
@@ -51,10 +51,15 @@ export function AllDocuments() {
       </div>
 
       <div className="mt-3">
-        {viewMode === "grid" ? (
-          <DocumentGrid documents={DOCUMENTS} />
+        {documents.length === 0 ? (
+          <p className="rounded-xl border border-dashed border-border p-10 text-center text-sm text-muted-foreground">
+            No documents yet. Create your first one from the Quick Actions
+            above.
+          </p>
+        ) : viewMode === "grid" ? (
+          <DocumentGrid documents={documents} />
         ) : (
-          <DocumentTable documents={DOCUMENTS} />
+          <DocumentTable documents={documents} />
         )}
       </div>
     </div>

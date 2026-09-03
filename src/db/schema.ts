@@ -73,3 +73,56 @@ export const comments = pgTable("comments", {
   content: text("content").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
+
+import { relations } from "drizzle-orm";
+
+export const profilesRelations = relations(profiles, ({ many }) => ({
+  documents: many(documents),
+  folders: many(folders),
+}));
+
+export const foldersRelations = relations(folders, ({ one, many }) => ({
+  owner: one(profiles, {
+    fields: [folders.ownerId],
+    references: [profiles.id],
+  }),
+  documents: many(documents),
+}));
+
+export const documentsRelations = relations(documents, ({ one, many }) => ({
+  owner: one(profiles, {
+    fields: [documents.ownerId],
+    references: [profiles.id],
+  }),
+  folder: one(folders, {
+    fields: [documents.folderId],
+    references: [folders.id],
+  }),
+  collaborators: many(documentCollaborators),
+  comments: many(comments),
+}));
+
+export const documentCollaboratorsRelations = relations(
+  documentCollaborators,
+  ({ one }) => ({
+    document: one(documents, {
+      fields: [documentCollaborators.documentId],
+      references: [documents.id],
+    }),
+    user: one(profiles, {
+      fields: [documentCollaborators.userId],
+      references: [profiles.id],
+    }),
+  }),
+);
+
+export const commentsRelations = relations(comments, ({ one }) => ({
+  document: one(documents, {
+    fields: [comments.documentId],
+    references: [documents.id],
+  }),
+  author: one(profiles, {
+    fields: [comments.authorId],
+    references: [profiles.id],
+  }),
+}));
