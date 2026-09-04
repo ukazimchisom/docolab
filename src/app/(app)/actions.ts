@@ -62,3 +62,50 @@ export async function updateDocument(
 
   return { success: true };
 }
+
+import { comments as commentsTable, profiles } from "@/db/schema";
+
+export async function addComment(documentId: string, content: string) {
+  const trimmed = content.trim();
+  if (!trimmed) {
+    return { error: "Comment cannot be empty." };
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { error: "Not authenticated." };
+  }
+
+  const [profile] = await db
+    .select()
+    .from(profiles)
+    .where(eq(profiles.id, user.id));
+
+  const [newComment] = await db
+    .insert(commentsTable)
+    .values({
+      documentId,
+      authorId: user.id,
+      content: trimmed,
+    })
+    .returning();
+
+  return {
+    success: true,
+    comment: {
+      id: newComment.id,
+      author: {
+        id: user.id,
+        name: profile?.fullName ?? "Unknown User",
+        initials: profile?.initials ?? "U",
+        avatarColor: profile?.avatarColor ?? "bg-primary",
+      },
+      content: newComment.content,
+      timestamp: "Just now",
+    },
+  };
+}

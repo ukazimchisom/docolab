@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
-import { getDocumentById } from "@/lib/mock-data";
 import { DocumentBreadcrumb } from "@/components/app/document-breadcrumb";
 import { DocumentContent } from "@/components/app/document-content";
 import { CommentsPanel } from "@/components/app/comments-panel";
 import { db } from "@/db";
 import { documents } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { getCommentsForDocument } from "@/lib/queries/comments";
 
 interface DocumentPageProps {
   params: Promise<{ id: string }>;
@@ -22,6 +22,8 @@ export default async function DocumentPage({ params }: DocumentPageProps) {
   if (!document) {
     notFound();
   }
+
+  const comments = await getCommentsForDocument(document.id);
 
   return (
     <div className="flex flex-col lg:h-full lg:flex-row">
@@ -41,7 +43,7 @@ export default async function DocumentPage({ params }: DocumentPageProps) {
         </div>
       </div>
 
-      <CommentsPanel />
+      <CommentsPanel documentId={document.id} initialComments={comments} />
     </div>
   );
 }

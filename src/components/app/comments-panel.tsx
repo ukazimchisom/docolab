@@ -1,35 +1,43 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { PaperPlaneTiltIcon } from "@phosphor-icons/react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { CommentItem } from "./comment-item";
-import { COMMENTS, COLLABORATORS } from "@/lib/mock-data";
+import { addComment } from "@/app/(app)/actions";
 import type { Comment } from "@/types/document";
 
-// Stand-in for the real logged-in user until authentication exists.
-const CURRENT_USER = COLLABORATORS[0];
+interface CommentsPanelProps {
+  documentId: string;
+  initialComments: Comment[];
+}
 
-export function CommentsPanel() {
-  const [comments, setComments] = useState<Comment[]>(COMMENTS);
+export function CommentsPanel({
+  documentId,
+  initialComments,
+}: CommentsPanelProps) {
+  const [comments, setComments] = useState<Comment[]>(initialComments);
   const [draft, setDraft] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
 
   function handleSubmit() {
     const trimmed = draft.trim();
     if (!trimmed) return;
 
-    const newComment: Comment = {
-      // Date.now() is a temporary client-side stand-in for a real
-      // database-generated ID once Supabase is integrated.
-      id: `temp-${Date.now()}`,
-      author: CURRENT_USER,
-      content: trimmed,
-      timestamp: "Just now",
-    };
+    setError(null);
+    startTransition(async () => {
+      const result = await addComment(documentId, trimmed);
 
-    setComments([...comments, newComment]);
-    setDraft("");
+      if (result.error || !result.comment) {
+        setError(result.error ?? "Something went wrong.");
+        return;
+      }
+
+      setComments((prev) => [...prev, result.comment]);
+      setDraft("");
+    });
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
@@ -52,9 +60,15 @@ export function CommentsPanel() {
 
       <div className="px-4 py-4 lg:flex-1 lg:overflow-y-auto">
         <div className="flex flex-col gap-5">
-          {comments.map((comment) => (
-            <CommentItem key={comment.id} comment={comment} />
-          ))}
+          {comments.length === 0 ? (
+            <p className="text-center text-sm text-muted-foreground">
+              No comments yet. Start the conversation below.
+            </p>
+          ) : (
+            comments.map((comment) => (
+              <CommentItem key={comment.id} comment={comment} />
+            ))
+          )}
         </div>
       </div>
 
@@ -67,15 +81,16 @@ export function CommentsPanel() {
           aria-label="Write a comment"
           className="min-h-16 resize-none"
         />
+        {error && <p className="mt-1.5 text-xs text-destructive">{error}</p>}
         <div className="mt-2 flex justify-end">
           <Button
             size="sm"
             onClick={handleSubmit}
-            disabled={!draft.trim()}
+            disabled={!draft.trim() || isPending}
             aria-label="Post comment"
           >
             <PaperPlaneTiltIcon size={14} />
-            Post
+            {isPending ? "Posting..." : "Post"}
           </Button>
         </div>
       </div>
