@@ -3,8 +3,13 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { db } from "@/db";
-import { documents } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import {
+  documents,
+  comments as commentsTable,
+  profiles,
+  documentCollaborators,
+} from "@/db/schema";
+import { eq, and } from "drizzle-orm";
 
 export async function createDocument() {
   const supabase = await createClient();
@@ -51,7 +56,22 @@ export async function updateDocument(
     return { error: "Document not found." };
   }
 
-  if (existing.ownerId !== user.id) {
+  const isOwner = existing.ownerId === user.id;
+
+  const [collaboratorRecord] = isOwner
+    ? []
+    : await db
+        .select()
+        .from(documentCollaborators)
+        .where(
+          and(
+            eq(documentCollaborators.documentId, documentId),
+            eq(documentCollaborators.userId, user.id),
+            eq(documentCollaborators.role, "editor"),
+          ),
+        );
+
+  if (!isOwner && !collaboratorRecord) {
     return { error: "You don't have permission to edit this document." };
   }
 
@@ -62,8 +82,6 @@ export async function updateDocument(
 
   return { success: true };
 }
-
-import { comments as commentsTable, profiles } from "@/db/schema";
 
 export async function addComment(documentId: string, content: string) {
   const trimmed = content.trim();
@@ -80,16 +98,56 @@ export async function addComment(documentId: string, content: string) {
     return { error: "Not authenticated." };
   }
 
+  const [existingDoc] = await db
+    .select({ ownerId: documents.ownerId })
+    .from(documents)
+    .where(eq(documents.id, documentId));
+
+  if (!existingDoc) {
+    return { error: "Document not found." };
+  }
+
+  const isOwner = existingDoc.ownerId === user.id;
+
+  const [collaboratorRecord] = isOwner
+    ? []
+    : await db
+        .select()
+        .from(documentCollaborators)
+        .where(
+          and(
+            eq(documentCollaborators.documentId, documentId),
+            eq(documentCollaborators.userId, user.id),
+            eq(documentCollaborators.role, "editor"),
+          ),
+        );
+
+  if (!isOwner && !collaboratorRecord) {
+    return { error: "You don't have permission to comment on this document." };
+  }
+
   const [profile] = await db
     .select()
     .from(profiles)
     .where(eq(profiles.id, user.id));
+
+  const collaboratorRows = await db
+    .select({ userId: documentCollaborators.userId })
+    .from(documentCollaborators)
+    .where(eq(documentCollaborators.documentId, documentId));
+
+  const authorizedUserIds = [
+    existingDoc.ownerId,
+    ...collaboratorRows.map((c) => c.userId),
+  ];
 
   const [newComment] = await db
     .insert(commentsTable)
     .values({
       documentId,
       authorId: user.id,
+      ownerId: existingDoc.ownerId,
+      authorizedUserIds,
       content: trimmed,
     })
     .returning();

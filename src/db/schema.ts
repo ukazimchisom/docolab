@@ -19,10 +19,11 @@ export const collaboratorRoleEnum = pgEnum("collaborator_role", [
 
 // Extends Supabase's built-in auth.users table with app-specific profile data.
 export const profiles = pgTable("profiles", {
-  id: uuid("id").primaryKey(), // matches auth.users.id
+  id: uuid("id").primaryKey(),
   fullName: text("full_name").notNull(),
   avatarColor: text("avatar_color").notNull().default("bg-primary"),
   initials: text("initials").notNull(),
+  email: text("email"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
@@ -70,6 +71,10 @@ export const comments = pgTable("comments", {
   authorId: uuid("author_id")
     .notNull()
     .references(() => profiles.id, { onDelete: "cascade" }),
+  ownerId: uuid("owner_id")
+    .notNull()
+    .references(() => profiles.id, { onDelete: "cascade" }),
+  authorizedUserIds: uuid("authorized_user_ids").array().notNull().default([]),
   content: text("content").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
