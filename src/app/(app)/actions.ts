@@ -167,3 +167,77 @@ export async function addComment(documentId: string, content: string) {
     },
   };
 }
+
+export async function inviteCollaborator(documentId: string, email: string) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { error: "Not authenticated." };
+  }
+
+  const [doc] = await db
+    .select({ ownerId: documents.ownerId })
+    .from(documents)
+    .where(eq(documents.id, documentId));
+
+  if (!doc) {
+    return { error: "Document not found." };
+  }
+
+  if (doc.ownerId !== user.id) {
+    return { error: "Only the document owner can invite collaborators." };
+  }
+
+  const [invitee] = await db
+    .select()
+    .from(profiles)
+    .where(eq(profiles.email, email.trim().toLowerCase()));
+
+  if (!invitee) {
+    return { error: "No Docolab user found with that email." };
+  }
+
+  if (invitee.id === user.id) {
+    return { error: "You can't invite yourself." };
+  }
+
+  const [existing] = await db
+    .select()
+    .from(documentCollaborators)
+    .where(
+      and(
+        eq(documentCollaborators.documentId, documentId),
+        eq(documentCollaborators.userId, invitee.id),
+      ),
+    );
+
+  if (existing) {
+    return { error: "This person already has access." };
+  }
+
+  await db.insert(documentCollaborators).values({
+    documentId,
+    userId: invitee.id,
+    role: "editor",
+  });
+
+  await db
+    .update(commentsTable)
+    .set({
+      authorizedUserIds: [doc.ownerId, invitee.id],
+    })
+    .where(eq(commentsTable.documentId, documentId));
+
+  return {
+    success: true,
+    collaborator: {
+      id: invitee.id,
+      name: invitee.fullName,
+      initials: invitee.initials,
+      avatarColor: invitee.avatarColor,
+    },
+  };
+}
