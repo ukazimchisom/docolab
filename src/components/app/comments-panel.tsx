@@ -7,16 +7,18 @@ import { Button } from "@/components/ui/button";
 import { CommentItem } from "./comment-item";
 import { addComment } from "@/app/(app)/actions";
 import { createClient } from "@/lib/supabase/client";
-import type { Comment } from "@/types/document";
+import type { Comment, Collaborator } from "@/types/document";
 
 interface CommentsPanelProps {
   documentId: string;
   initialComments: Comment[];
+  knownCollaborators: Collaborator[];
 }
 
 export function CommentsPanel({
   documentId,
   initialComments,
+  knownCollaborators,
 }: CommentsPanelProps) {
   const [comments, setComments] = useState<Comment[]>(initialComments);
   const [newIds, setNewIds] = useState<Set<string>>(new Set());
@@ -26,6 +28,7 @@ export function CommentsPanel({
 
   useEffect(() => {
     const supabase = createClient();
+    let isCancelled = false;
 
     const channel = supabase.channel(`comments-${documentId}`);
 
@@ -44,19 +47,17 @@ export function CommentsPanel({
           content: string;
         };
 
-        const { data: authorProfile } = await supabase
-          .from("profiles")
-          .select("id, full_name, initials, avatar_color")
-          .eq("id", newRow.author_id)
-          .single();
+        const knownAuthor = knownCollaborators.find(
+          (c) => c.id === newRow.author_id,
+        );
 
         const newComment: Comment = {
           id: newRow.id,
-          author: {
+          author: knownAuthor ?? {
             id: newRow.author_id,
-            name: authorProfile?.full_name ?? "Unknown User",
-            initials: authorProfile?.initials ?? "U",
-            avatarColor: authorProfile?.avatar_color ?? "bg-primary",
+            name: "Unknown User",
+            initials: "U",
+            avatarColor: "bg-primary",
           },
           content: newRow.content,
           timestamp: "Just now",
@@ -72,6 +73,7 @@ export function CommentsPanel({
 
     async function subscribeWithAuth() {
       const { data } = await supabase.auth.getSession();
+      if (isCancelled) return; // effect was cleaned up while we were awaiting
       if (data.session) {
         supabase.realtime.setAuth(data.session.access_token);
       }
@@ -80,10 +82,20 @@ export function CommentsPanel({
 
     subscribeWithAuth();
 
+    const {
+      data: { subscription: authSubscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "TOKEN_REFRESHED" && session) {
+        supabase.realtime.setAuth(session.access_token);
+      }
+    });
+
     return () => {
+      isCancelled = true;
       supabase.removeChannel(channel);
+      authSubscription.unsubscribe();
     };
-  }, [documentId]);
+  }, [documentId, knownCollaborators]);
 
   function handleSubmit() {
     const trimmed = draft.trim();
