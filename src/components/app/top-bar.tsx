@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SecondaryPanelMobile } from "./secondary-panel-mobile";
 import { logout } from "@/app/(auth)/actions";
+import { ThemeToggle } from "./theme-toggle";
 
 interface TopBarUser {
   name: string;
@@ -57,6 +58,7 @@ export function TopBar({ user }: { user: TopBarUser }) {
       </div>
 
       <div className="ml-auto flex items-center gap-2">
+        <ThemeToggle />
         <Button
           variant="ghost"
           size="icon"
