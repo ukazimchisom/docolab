@@ -241,3 +241,31 @@ export async function inviteCollaborator(documentId: string, email: string) {
     },
   };
 }
+
+export async function deleteDocument(documentId: string) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { error: "Not authenticated." };
+  }
+
+  const [doc] = await db
+    .select({ ownerId: documents.ownerId })
+    .from(documents)
+    .where(eq(documents.id, documentId));
+
+  if (!doc) {
+    return { error: "Document not found." };
+  }
+
+  if (doc.ownerId !== user.id) {
+    return { error: "Only the document owner can delete this document." };
+  }
+
+  await db.delete(documents).where(eq(documents.id, documentId));
+
+  return { success: true };
+}

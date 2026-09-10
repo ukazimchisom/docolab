@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { StatusBadge } from "./status-badge";
 import type { DocumentItem } from "@/types/document";
+import { DocumentActionsMenu } from "./document-actions-menu";
 
 export function DocumentTable({ documents }: { documents: DocumentItem[] }) {
   return (
@@ -23,6 +24,9 @@ export function DocumentTable({ documents }: { documents: DocumentItem[] }) {
             </th>
             <th scope="col" className="px-4 py-3 font-medium">
               Status
+            </th>
+            <th scope="col" className="px-4 py-3 font-medium">
+              <span className="sr-only">Actions</span>
             </th>
           </tr>
         </thead>
@@ -72,6 +76,12 @@ export function DocumentTable({ documents }: { documents: DocumentItem[] }) {
               </td>
               <td className="px-4 py-3">
                 <StatusBadge status={doc.status} />
+              </td>
+              <td className="px-4 py-3">
+                <DocumentActionsMenu
+                  documentId={doc.id}
+                  currentTitle={doc.title}
+                />
               </td>
             </tr>
           ))}
