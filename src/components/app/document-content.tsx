@@ -17,6 +17,7 @@ import {
 } from "@/lib/tiptap-content";
 import { EditorToolbar } from "./editor-toolbar";
 import { TextAlign } from "@tiptap/extension-text-align";
+import { Image as TipTapImage } from "@tiptap/extension-image";
 
 interface DocumentContentProps {
   documentId: string;
@@ -55,6 +56,9 @@ export function DocumentContent({
       Underline,
       Link.configure({ openOnClick: false }),
       TextAlign.configure({ types: ["heading", "paragraph"] }),
+      TipTapImage.configure({
+        HTMLAttributes: { class: "rounded-lg max-w-full" },
+      }),
     ],
     content: parseDocumentContent(initialContent),
     editorProps: {
@@ -115,7 +119,7 @@ export function DocumentContent({
       />
 
       <div className="mt-4">
-        <EditorToolbar editor={editor} />
+        <EditorToolbar editor={editor} documentId={documentId} />
         <EditorContent editor={editor} className="mt-3" />
       </div>
     </div>

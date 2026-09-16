@@ -18,7 +18,11 @@ import {
   EraserIcon,
   SmileyIcon,
 } from "@phosphor-icons/react";
-import { useState } from "react";
+
+import { useRef, useState } from "react";
+import { ImageIcon } from "@phosphor-icons/react";
+import { toast } from "sonner";
+import { uploadDocumentImage } from "@/lib/upload-image";
 
 function ToolbarButton({
   onClick,
@@ -48,7 +52,13 @@ function ToolbarButton({
   );
 }
 
-export function EditorToolbar({ editor }: { editor: Editor }) {
+export function EditorToolbar({
+  editor,
+  documentId,
+}: {
+  editor: Editor;
+  documentId: string;
+}) {
   function setLink() {
     const previousUrl = editor.getAttributes("link").href as string | undefined;
     const url = window.prompt("Link URL", previousUrl ?? "");
@@ -83,6 +93,26 @@ export function EditorToolbar({ editor }: { editor: Editor }) {
     "🙌",
     "💯",
   ];
+
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  async function handleImageSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = ""; // allow selecting the same file again later
+    if (!file) return;
+
+    setIsUploading(true);
+    const result = await uploadDocumentImage(file, documentId);
+    setIsUploading(false);
+
+    if (result.error || !result.url) {
+      toast.error(result.error ?? "Upload failed.");
+      return;
+    }
+
+    editor.chain().focus().setImage({ src: result.url }).run();
+  }
 
   return (
     <div className="flex items-center gap-1 border-b border-border pb-2">
@@ -209,6 +239,27 @@ export function EditorToolbar({ editor }: { editor: Editor }) {
       >
         <QuotesIcon size={16} />
       </ToolbarButton>
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={handleImageSelect}
+      />
+      <ToolbarButton
+        label="Insert image"
+        active={false}
+        onClick={() => fileInputRef.current?.click()}
+      >
+        {isUploading ? (
+          <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+        ) : (
+          <ImageIcon size={16} />
+        )}
+      </ToolbarButton>
+
+      <div className="mx-1 h-4 w-px bg-border" />
 
       <ToolbarButton
         label="Clear formatting"
