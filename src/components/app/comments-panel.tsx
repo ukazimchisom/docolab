@@ -126,7 +126,7 @@ export function CommentsPanel({
   }
 
   return (
-    <aside className="flex w-full flex-col border-t border-border lg:h-full lg:w-80 lg:border-l lg:border-t-0">
+    <aside className="flex w-full flex-col border-t border-border lg:h-full lg:w-60 lg:border-l lg:border-t-0">
       <div className="flex items-center justify-between border-b border-border px-4 py-3.5">
         <h2 className="text-sm font-semibold text-foreground">
           Comments{" "}

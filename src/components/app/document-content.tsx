@@ -16,6 +16,7 @@ import {
   serializeDocumentContent,
 } from "@/lib/tiptap-content";
 import { EditorToolbar } from "./editor-toolbar";
+import { TextAlign } from "@tiptap/extension-text-align";
 
 interface DocumentContentProps {
   documentId: string;
@@ -49,7 +50,12 @@ export function DocumentContent({
 
   const editor = useEditor({
     immediatelyRender: false,
-    extensions: [StarterKit, Underline, Link.configure({ openOnClick: false })],
+    extensions: [
+      StarterKit,
+      Underline,
+      Link.configure({ openOnClick: false }),
+      TextAlign.configure({ types: ["heading", "paragraph"] }),
+    ],
     content: parseDocumentContent(initialContent),
     editorProps: {
       attributes: {
