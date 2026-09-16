@@ -62,7 +62,7 @@ export function SecondaryPanelContent() {
             <Link
               key={folder.id}
               href={`/documents/folder/${folder.id}`}
-              className="flex items-center justify-between rounded-md px-2 py-2 text-sm text-sidebar-foreground hover:bg-sidebar-accent"
+              className="flex items-center justify-between rounded-md px-2 py-2 text-xs text-sidebar-foreground hover:bg-sidebar-accent"
             >
               <span className="flex items-center gap-2">
                 <FolderIcon size={16} className="text-sidebar-foreground/50" />
@@ -89,7 +89,7 @@ export function SecondaryPanelContent() {
               key={doc.id}
               href={`/documents/${doc.id}`}
               aria-current={doc.id === activeDocId ? "page" : undefined}
-              className={`truncate rounded-md px-2 py-2 text-sm transition-colors ${
+              className={`truncate rounded-md px-2 py-2 text-xs transition-colors ${
                 doc.id === activeDocId
                   ? "bg-sidebar-accent font-medium text-sidebar-primary"
                   : "text-sidebar-foreground hover:bg-sidebar-accent"
@@ -109,7 +109,7 @@ export function SecondaryPanelContent() {
           <Link
             key={link.label}
             href={link.href}
-            className="flex items-center justify-between rounded-md px-2 py-2 text-sm text-sidebar-foreground hover:bg-sidebar-accent"
+            className="flex items-center justify-between rounded-md px-2 py-2 text-xs text-sidebar-foreground hover:bg-sidebar-accent"
           >
             <span className="flex items-center gap-2">
               <link.icon size={16} className="text-sidebar-foreground/50" />

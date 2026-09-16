@@ -38,11 +38,13 @@ import { updateDocument, deleteDocument } from "@/app/(app)/actions";
 interface DocumentActionsMenuProps {
   documentId: string;
   currentTitle: string;
+  isOwner?: boolean;
 }
 
 export function DocumentActionsMenu({
   documentId,
   currentTitle,
+  isOwner = true,
 }: DocumentActionsMenuProps) {
   const router = useRouter();
   const [renameOpen, setRenameOpen] = useState(false);
@@ -99,39 +101,41 @@ export function DocumentActionsMenu({
             <PencilSimpleIcon size={16} />
             Rename
           </DropdownMenuItem>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <DropdownMenuItem
-                variant="destructive"
-                onSelect={(e) => e.preventDefault()}
-              >
-                <TrashIcon size={16} />
-                Delete
-              </DropdownMenuItem>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>
-                  Delete &quot;{currentTitle}&quot;?
-                </AlertDialogTitle>
-                <AlertDialogDescription>
-                  This will permanently delete this document, its comments, and
-                  remove access for all collaborators. This action cannot be
-                  undone.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={handleDelete}
-                  disabled={isPending}
-                  className="bg-destructive text-white hover:bg-destructive/90"
+          {isOwner && (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <DropdownMenuItem
+                  variant="destructive"
+                  onSelect={(e) => e.preventDefault()}
                 >
-                  {isPending ? "Deleting..." : "Delete"}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+                  <TrashIcon size={16} />
+                  Delete
+                </DropdownMenuItem>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Delete &quot;{currentTitle}&quot;?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will permanently delete this document, its comments,
+                    and remove access for all collaborators. This action cannot
+                    be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleDelete}
+                    disabled={isPending}
+                    className="bg-destructive text-white hover:bg-destructive/90"
+                  >
+                    {isPending ? "Deleting..." : "Delete"}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
 

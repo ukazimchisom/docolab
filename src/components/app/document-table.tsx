@@ -81,6 +81,7 @@ export function DocumentTable({ documents }: { documents: DocumentItem[] }) {
                 <DocumentActionsMenu
                   documentId={doc.id}
                   currentTitle={doc.title}
+                  isOwner={doc.isOwner}
                 />
               </td>
             </tr>

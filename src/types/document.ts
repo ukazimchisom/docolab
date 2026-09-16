@@ -39,3 +39,14 @@ export interface Comment {
   replyCount?: number;
   reactions?: { emoji: string; count: number }[];
 }
+export interface DocumentItem {
+  id: string;
+  title: string;
+  category: string;
+  status: DocumentStatus;
+  owner: Collaborator;
+  collaborators: Collaborator[];
+  lastEditedAt: string;
+  folderId: string | null;
+  isOwner?: boolean;
+}

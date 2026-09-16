@@ -13,7 +13,11 @@ export function DocumentGrid({ documents }: { documents: DocumentItem[] }) {
           className="relative rounded-xl border border-border bg-card p-4 transition-colors hover:border-primary/40"
         >
           <div className="absolute right-2 top-2">
-            <DocumentActionsMenu documentId={doc.id} currentTitle={doc.title} />
+            <DocumentActionsMenu
+              documentId={doc.id}
+              currentTitle={doc.title}
+              isOwner={doc.isOwner}
+            />
           </div>
 
           <Link href={`/documents/${doc.id}`} className="block">
@@ -37,7 +41,7 @@ export function DocumentGrid({ documents }: { documents: DocumentItem[] }) {
                     {doc.owner.initials}
                   </AvatarFallback>
                 </Avatar>
-                <span className="text-xs text-muted-foreground">
+                <span className="text-[10px] text-muted-foreground">
                   {doc.lastEditedAt}
                 </span>
               </div>
