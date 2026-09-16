@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { inviteCollaborator } from "@/app/(app)/actions";
 import type { Collaborator } from "@/types/document";
+import { toast } from "sonner";
 
 interface ShareDialogProps {
   documentId: string;
@@ -44,6 +45,7 @@ export function ShareDialog({
 
       setCollaborators((prev) => [...prev, result.collaborator!]);
       setEmail("");
+      toast.success(`${result.collaborator.name} now has access`);
     });
   }
 

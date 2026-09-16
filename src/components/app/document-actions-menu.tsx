@@ -34,6 +34,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { updateDocument, deleteDocument } from "@/app/(app)/actions";
+import { toast } from "sonner";
 
 interface DocumentActionsMenuProps {
   documentId: string;
@@ -64,6 +65,7 @@ export function DocumentActionsMenu({
         return;
       }
       setRenameOpen(false);
+      toast.success("Document renamed");
       router.refresh();
     });
   }
@@ -71,9 +73,12 @@ export function DocumentActionsMenu({
   function handleDelete() {
     startTransition(async () => {
       const result = await deleteDocument(documentId);
-      if (!result.error) {
-        router.refresh();
+      if (result.error) {
+        toast.error(result.error);
+        return;
       }
+      toast.success("Document deleted");
+      router.refresh();
     });
   }
 
