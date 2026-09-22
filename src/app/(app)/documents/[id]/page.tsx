@@ -4,9 +4,10 @@ import { DocumentContent } from "@/components/app/document-content";
 import { CommentsPanel } from "@/components/app/comments-panel";
 import { ShareDialog } from "@/components/app/share-dialog";
 import { db } from "@/db";
-import { documents } from "@/db/schema";
+import { documents, profiles } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { getCommentsForDocument } from "@/lib/queries/comments";
+import { createClient } from "@/lib/supabase/server";
 
 interface DocumentPageProps {
   params: Promise<{ id: string }>;
@@ -14,6 +15,15 @@ interface DocumentPageProps {
 
 export default async function DocumentPage({ params }: DocumentPageProps) {
   const { id } = await params;
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const [currentUserProfile] = user
+    ? await db.select().from(profiles).where(eq(profiles.id, user.id))
+    : [];
 
   const [document] = await db
     .select()
@@ -68,6 +78,12 @@ export default async function DocumentPage({ params }: DocumentPageProps) {
             documentId={document.id}
             initialTitle={document.title}
             initialContent={document.content ?? ""}
+            currentUser={{
+              id: user!.id,
+              name: currentUserProfile?.fullName ?? "You",
+              initials: currentUserProfile?.initials ?? "U",
+              avatarColor: currentUserProfile?.avatarColor ?? "bg-primary",
+            }}
           />
         </div>
       </div>

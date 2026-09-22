@@ -17,3 +17,17 @@
   upfront warnings that would normally surface these. If future TipTap
   extensions fail to resolve, check `npm ls <package>` for "missing"
   entries before assuming it's a code bug.
+
+## Realtime Collaboration Security
+
+- Document content Broadcast channels are not RLS-protected (Supabase's
+  private-channel authorization was not implemented for scope reasons).
+  Access relies on document UUIDs being unguessable, not enforced
+  permissions. Revisit before any real production launch.
+
+## Realtime Collaboration Sync Edge Case
+
+- A client with pending (not-yet-saved, within the 800ms debounce window)
+  local changes may not share those specific keystrokes with a client
+  that joins in that exact window, until the next save completes. No
+  full sync-handshake protocol implemented; accepted given short debounce.

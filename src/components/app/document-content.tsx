@@ -17,11 +17,15 @@ import {
 import { updateDocument } from "@/app/(app)/actions";
 import { encodeYDoc, loadIntoYDoc } from "@/lib/yjs-content";
 import { EditorToolbar } from "./editor-toolbar";
+import { useYjsSync } from "@/lib/hooks/use-yjs-sync";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import type { Collaborator } from "@/types/document";
 
 interface DocumentContentProps {
   documentId: string;
   initialTitle: string;
   initialContent: string;
+  currentUser: Collaborator;
 }
 
 type SaveStatus = "idle" | "saving" | "saved" | "error";
@@ -30,6 +34,7 @@ export function DocumentContent({
   documentId,
   initialTitle,
   initialContent,
+  currentUser,
 }: DocumentContentProps) {
   const [title, setTitle] = useState(initialTitle);
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
@@ -41,6 +46,12 @@ export function DocumentContent({
     ydocRef.current = new Y.Doc();
     loadIntoYDoc(ydocRef.current, initialContent);
   }
+
+  const { presentUsers, status } = useYjsSync(
+    documentId,
+    ydocRef.current,
+    currentUser,
+  );
 
   function scheduleSave(nextTitle: string, saveContent: boolean) {
     setSaveStatus("saving");
@@ -108,10 +119,32 @@ export function DocumentContent({
   return (
     <div className="mx-auto w-full max-w-3xl">
       <div className="flex items-center justify-between gap-2 rounded-lg border border-primary/20 bg-accent/40 px-3 py-2.5 text-sm text-foreground">
-        <div className="flex items-start gap-2">
-          <InfoIcon size={16} className="mt-0.5 shrink-0 text-primary" />
-          <p>Live multi-user sync is being wired up in the next step.</p>
+        <div className="flex items-center gap-2">
+          <span
+            className={`h-2 w-2 rounded-full ${
+              status === "connected"
+                ? "bg-emerald-500"
+                : "bg-muted-foreground/40"
+            }`}
+          />
+          <span className="text-xs text-muted-foreground">
+            {status === "connected" ? "Live" : "Connecting..."}
+          </span>
+          {presentUsers.length > 0 && (
+            <div className="ml-2 flex -space-x-1.5">
+              {presentUsers.map((u) => (
+                <Avatar key={u.id} className="h-5 w-5 border-2 border-card">
+                  <AvatarFallback
+                    className={`${u.avatarColor} text-[8px] text-white`}
+                  >
+                    {u.initials}
+                  </AvatarFallback>
+                </Avatar>
+              ))}
+            </div>
+          )}
         </div>
+
         <SaveIndicator status={saveStatus} isPending={isPending} />
       </div>
 
