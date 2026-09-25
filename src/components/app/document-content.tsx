@@ -97,7 +97,7 @@ export function DocumentContent({
       timeout = setTimeout(() => {
         if (!editor) return;
         scheduleSave(title, true);
-      }, 800);
+      }, 2000);
     }
 
     editor.on("update", handleUpdate);
@@ -111,7 +111,7 @@ export function DocumentContent({
   function handleTitleChange(value: string) {
     setTitle(value);
     setSaveStatus("saving");
-    setTimeout(() => scheduleSave(value, false), 800);
+    setTimeout(() => scheduleSave(value, false), 2000);
   }
 
   if (!editor) return null;

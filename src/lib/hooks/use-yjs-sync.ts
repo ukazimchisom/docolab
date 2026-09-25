@@ -18,15 +18,17 @@ export function useYjsSync(
   useEffect(() => {
     let isCancelled = false; // scoped to THIS effect run only
     const supabase = createClient();
-    const channel = supabase.channel(`document-content-${documentId}`);
+    const topicName = `document-content-${documentId}`;
+
+    const channel = supabase.channel(topicName, {
+      config: { private: true },
+    });
 
     channel.on("broadcast", { event: "yjs-update" }, ({ payload }) => {
-     
       const update = Uint8Array.from(atob(payload.update as string), (c) =>
         c.charCodeAt(0),
       );
       Y.applyUpdate(ydoc, update, "remote");
-      
     });
 
     channel.on("presence", { event: "sync" }, () => {
@@ -39,10 +41,9 @@ export function useYjsSync(
     });
 
     function handleLocalUpdate(update: Uint8Array, origin: unknown) {
-     
       if (origin === "remote") return;
       const base64 = btoa(String.fromCharCode(...update));
-     
+
       channel.send({
         type: "broadcast",
         event: "yjs-update",
