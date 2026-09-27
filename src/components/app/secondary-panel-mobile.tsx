@@ -11,8 +11,13 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { SecondaryPanelContent } from "./secondary-panel-content";
+import type { DocumentItem } from "@/types/document";
 
-export function SecondaryPanelMobile() {
+export function SecondaryPanelMobile({
+  recentDocuments,
+}: {
+  recentDocuments: DocumentItem[];
+}) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -31,7 +36,7 @@ export function SecondaryPanelMobile() {
         <SheetHeader className="sr-only">
           <SheetTitle>Documents navigation</SheetTitle>
         </SheetHeader>
-        <SecondaryPanelContent />
+        <SecondaryPanelContent recentDocuments={recentDocuments} />
       </SheetContent>
     </Sheet>
   );

@@ -23,6 +23,7 @@ import {
 import { SecondaryPanelMobile } from "./secondary-panel-mobile";
 import { logout } from "@/app/(auth)/actions";
 import { ThemeToggle } from "./theme-toggle";
+import { DocumentItem } from "@/types/document";
 
 interface TopBarUser {
   name: string;
@@ -30,7 +31,13 @@ interface TopBarUser {
   initials: string;
 }
 
-export function TopBar({ user }: { user: TopBarUser }) {
+export function TopBar({
+  user,
+  recentDocuments,
+}: {
+  user: TopBarUser;
+  recentDocuments: DocumentItem[];
+}) {
   const isMac =
     typeof navigator !== "undefined" &&
     navigator.platform.toUpperCase().includes("MAC");
@@ -39,7 +46,7 @@ export function TopBar({ user }: { user: TopBarUser }) {
 
   return (
     <header className="flex h-16 items-center gap-3 border-b border-border bg-background px-4 lg:px-6">
-      <SecondaryPanelMobile />
+      <SecondaryPanelMobile recentDocuments={recentDocuments} />
 
       <div className="relative flex-1 max-w-md">
         <MagnifyingGlassIcon

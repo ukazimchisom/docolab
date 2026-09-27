@@ -6,7 +6,6 @@
 import type {
   Collaborator,
   DocumentItem,
-  Folder,
   NavItem,
   Comment,
 } from "@/types/document";
@@ -26,12 +25,6 @@ export const COLLABORATORS: Collaborator[] = [
     initials: "JS",
     avatarColor: "bg-rose-700",
   },
-];
-
-export const FOLDERS: Folder[] = [
-  { id: "f1", name: "Product", documentCount: 4 },
-  { id: "f2", name: "Marketing", documentCount: 6 },
-  { id: "f3", name: "Operations", documentCount: 9 },
 ];
 
 export const DOCUMENTS: DocumentItem[] = [
@@ -107,7 +100,6 @@ export const NAV_ITEMS: NavItem[] = [
     icon: "ClockCounterClockwise",
   },
   { id: "analytics", label: "Analytics", href: "/analytics", icon: "ChartBar" },
-  { id: "ai", label: "AI Assistant", href: "/ai", icon: "Sparkle" },
 ];
 
 export interface StorageBreakdownItem {

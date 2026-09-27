@@ -7,7 +7,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { FOLDERS } from "@/lib/mock-data";
 
 interface BreadcrumbDocument {
   title: string;
@@ -19,8 +18,6 @@ export function DocumentBreadcrumb({
 }: {
   document: BreadcrumbDocument;
 }) {
-  const folder = FOLDERS.find((f) => f.name === document.category);
-
   return (
     <Breadcrumb>
       <BreadcrumbList>
@@ -32,11 +29,7 @@ export function DocumentBreadcrumb({
         <BreadcrumbSeparator />
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
-            <Link
-              href={folder ? `/documents/folder/${folder.id}` : "/documents"}
-            >
-              {document.category}
-            </Link>
+            <Link href="/documents">{document.category}</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
