@@ -3,7 +3,6 @@
 import Link from "next/link";
 import {
   MagnifyingGlassIcon,
-  BellIcon,
   SignOutIcon,
   UserIcon,
   GearIcon,
@@ -66,15 +65,6 @@ export function TopBar({
 
       <div className="ml-auto flex items-center gap-2">
         <ThemeToggle />
-        <Button
-          variant="ghost"
-          size="icon"
-          aria-label="Notifications"
-          className="relative"
-        >
-          <BellIcon size={20} />
-          <Badge className="absolute right-1 top-1 h-2 w-2 rounded-full p-0" />
-        </Button>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
