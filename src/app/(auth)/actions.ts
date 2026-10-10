@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { loginSchema, signupSchema } from "@/lib/validations/auth";
+import { getInitials } from "@/lib/user-helpers";
 
 const AVATAR_COLORS = [
   "bg-primary",
@@ -10,13 +11,6 @@ const AVATAR_COLORS = [
   "bg-amber-700",
   "bg-rose-700",
 ];
-
-function getInitials(fullName: string): string {
-  const parts = fullName.trim().split(/\s+/);
-  const first = parts[0]?.[0] ?? "";
-  const last = parts.length > 1 ? parts[parts.length - 1][0] : "";
-  return (first + last).toUpperCase();
-}
 
 export async function login(input: unknown) {
   const parsed = loginSchema.safeParse(input);
