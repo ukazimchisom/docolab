@@ -7,3 +7,21 @@
   updated to the production domain. All MVP features verified working
   in production: auth, document CRUD, rich text editing, real-time
   comment + content sync with presence, sharing, dark mode.
+
+  ## Testing and tooling (Oct 2026)
+
+### Resolved: Vitest failed to start on Windows
+
+- **Symptom 1:** `Cannot find package 'vite'` when running `npm test`.
+  **Cause:** `vite` is a peer dependency, and `.npmrc` sets `legacy-peer-deps=true`, so npm does not install peers automatically.
+  **Fix:** `npm install -D vite`. Rule: with `legacy-peer-deps`, list every peer dependency explicitly (this also applied to `@testing-library/dom`).
+- **Symptom 2:** `Cannot find native binding` from Rolldown (used by Vite 8).
+  **Cause:** npm's optional-dependency bug (npm/cli#4828). The Windows native binary was skipped, even after a clean reinstall.
+  **Fix:** added `@rolldown/binding-win32-x64-msvc` (same version as `rolldown`) under `optionalDependencies`, NOT `devDependencies`. Optional means Linux (Vercel, CI) skips it instead of failing with EBADPLATFORM.
+  **If it returns:** after upgrading Vite, update that version to match `npm ls rolldown`.
+
+### Open: small items
+
+- `StatusBadge` uses `text-[7px]`, which is too small to read comfortably. Revisit with the design pass.
+- `vitest.config.ts` prints two notices: it is ESM syntax in a CommonJS package (rename to `vitest.config.mts`), and Vite now supports tsconfig paths natively (the `vite-tsconfig-paths` plugin can be dropped). Low priority, no functional impact.
+- `npm audit` reports 16 vulnerabilities (1 critical). Needs triage, and the critical one should be checked before launch.
