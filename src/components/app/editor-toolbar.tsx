@@ -24,7 +24,7 @@ import { ImageIcon } from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { uploadDocumentImage } from "@/lib/upload-image";
 
-function ToolbarButton({
+export function ToolbarButton({
   onClick,
   active,
   label,
