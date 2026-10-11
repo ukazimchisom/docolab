@@ -20,6 +20,7 @@ import { EditorToolbar } from "./editor-toolbar";
 import { useYjsSync } from "@/lib/hooks/use-yjs-sync";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import type { Collaborator } from "@/types/document";
+import { useRouter } from "next/navigation";
 
 interface DocumentContentProps {
   documentId: string;
@@ -39,6 +40,8 @@ export function DocumentContent({
   const [title, setTitle] = useState(initialTitle);
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
   const [isPending, startTransition] = useTransition();
+
+  const router = useRouter();
 
   // Always-current title, readable from effects that don't re-run on every render.
   const titleRef = useRef(initialTitle);
@@ -69,6 +72,8 @@ export function DocumentContent({
           : {}),
       });
       setSaveStatus(result.error ? "error" : "saved");
+      setSaveStatus(result.error ? "error" : "saved");
+      if (!result.error && !saveContent) router.refresh();
     });
   }
 
