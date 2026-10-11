@@ -25,3 +25,15 @@
 - `StatusBadge` uses `text-[7px]`, which is too small to read comfortably. Revisit with the design pass.
 - `vitest.config.ts` prints two notices: it is ESM syntax in a CommonJS package (rename to `vitest.config.mts`), and Vite now supports tsconfig paths natively (the `vite-tsconfig-paths` plugin can be dropped). Low priority, no functional impact.
 - `npm audit` reports 16 vulnerabilities (1 critical). Needs triage, and the critical one should be checked before launch.
+
+### Resolved: Next.js security advisories (Oct 2026)
+
+- `npm audit` flagged Next.js 16.0.0 - 16.3.7 (1 critical: RCE and SSRF in image optimization, cache poisoning, others).
+  Upgraded 16.3.1 to 16.4.0. Tests and production build verified before deploy.
+
+### Accepted: npm audit, shadcn CLI chain (7 high)
+
+- `braces` (ReDoS) reaches us only through `shadcn` > `@shadcn/registry` / `ts-morph` > `fast-glob` > `micromatch`.
+  This is the component CLI, a build-time tool that does not run in the app's server or browser code.
+- `npm audit fix --force` would downgrade `shadcn` to 1.0.0 (breaking). Do NOT run it.
+- Re-check with `npm audit --omit=dev` after upgrading `shadcn`; close this item when it ships patched dependencies.
