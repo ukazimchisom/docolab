@@ -40,6 +40,12 @@ export function DocumentContent({
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
   const [isPending, startTransition] = useTransition();
 
+  // Always-current title, readable from effects that don't re-run on every render.
+  const titleRef = useRef(initialTitle);
+  const titleTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
+
   // Created once per document, kept alive for the component's lifetime.
   const ydocRef = useRef<Y.Doc | null>(null);
   if (!ydocRef.current) {
@@ -96,7 +102,7 @@ export function DocumentContent({
       setSaveStatus("saving");
       timeout = setTimeout(() => {
         if (!editor) return;
-        scheduleSave(title, true);
+        scheduleSave(titleRef.current, true);
       }, 2000);
     }
 
@@ -110,8 +116,13 @@ export function DocumentContent({
 
   function handleTitleChange(value: string) {
     setTitle(value);
+    titleRef.current = value;
     setSaveStatus("saving");
-    setTimeout(() => scheduleSave(value, false), 2000);
+    clearTimeout(titleTimeoutRef.current);
+    titleTimeoutRef.current = setTimeout(
+      () => scheduleSave(titleRef.current, false),
+      2000,
+    );
   }
 
   if (!editor) return null;
