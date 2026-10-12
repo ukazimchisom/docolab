@@ -37,3 +37,15 @@
   This is the component CLI, a build-time tool that does not run in the app's server or browser code.
 - `npm audit fix --force` would downgrade `shadcn` to 1.0.0 (breaking). Do NOT run it.
 - Re-check with `npm audit --omit=dev` after upgrading `shadcn`; close this item when it ships patched dependencies.
+
+## Export (Oct 2026)
+
+### Accepted limitations
+
+- **Markdown export** drops underline and text alignment (no Markdown equivalent). Images are exported as links to their public storage URLs, so they stop working if the image is deleted or the bucket changes.
+- **PDF export** uses the browser's print dialog. Users must choose "Save as PDF", and browsers add a header/footer (URL, date) unless "Headers and footers" is unticked. CSS can't control this. A true one-click PDF would need server-side rendering (for example headless Chromium), which is a Phase 2+ consideration.
+- Export is only available inside an open document, not from the documents list (the list doesn't load document content).
+
+### Open: editor autosave
+
+- Leaving the page within 2 seconds of the last keystroke cancels the pending content save, so that final edit may not reach the database. Other connected users still see it live.
