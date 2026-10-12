@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { htmlToMarkdown, toSafeFileName } from "./export";
-
+import { htmlToMarkdown, toSafeFileName, buildMarkdownExport } from "./export";
 describe("htmlToMarkdown", () => {
   it("converts headings", () => {
     expect(htmlToMarkdown("<h2>Title</h2>")).toBe("## Title\n");
@@ -52,5 +51,23 @@ describe("toSafeFileName", () => {
 
   it("keeps letters from other languages", () => {
     expect(toSafeFileName("Résumé draft", "pdf")).toBe("résumé-draft.pdf");
+  });
+});
+
+describe("buildMarkdownExport", () => {
+  it("puts the title first as a level-1 heading", () => {
+    expect(buildMarkdownExport("My Doc", "<p>Hello</p>")).toBe(
+      "# My Doc\n\nHello\n",
+    );
+  });
+
+  it("uses 'Untitled' when the title is blank", () => {
+    expect(buildMarkdownExport("   ", "<p>Hello</p>")).toBe(
+      "# Untitled\n\nHello\n",
+    );
+  });
+
+  it("still returns the heading when the body is empty", () => {
+    expect(buildMarkdownExport("My Doc", "<p></p>")).toBe("# My Doc\n");
   });
 });
