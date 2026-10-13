@@ -12,6 +12,10 @@ import {
   buildSummaryPrompt,
 } from "@/lib/ai/summary-input";
 import { generateSummary } from "@/lib/ai/gemini";
+import {
+  consumeSummaryQuota,
+  SUMMARY_LIMIT_PER_HOUR,
+} from "@/lib/ai/rate-limit";
 
 export type SummarizeResult =
   | { ok: true; summary: string; truncated: boolean }
@@ -70,6 +74,14 @@ export async function summarizeDocument(
     return {
       ok: false,
       error: `This document is too short to summarize (at least ${MIN_CHARS_HINT} characters needed).`,
+    };
+  }
+
+  const allowed = await consumeSummaryQuota(user.id);
+  if (!allowed) {
+    return {
+      ok: false,
+      error: `You've reached the limit of ${SUMMARY_LIMIT_PER_HOUR} summaries per hour. Please try again later.`,
     };
   }
 
