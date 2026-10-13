@@ -9,11 +9,7 @@ import { Link } from "@tiptap/extension-link";
 import { TextAlign } from "@tiptap/extension-text-align";
 import { Image as TipTapImage } from "@tiptap/extension-image";
 import { Collaboration } from "@tiptap/extension-collaboration";
-import {
-  InfoIcon,
-  CheckCircleIcon,
-  SpinnerGapIcon,
-} from "@phosphor-icons/react";
+import { CheckCircleIcon, SpinnerGapIcon } from "@phosphor-icons/react";
 import { updateDocument } from "@/app/(app)/actions";
 import { encodeYDoc, loadIntoYDoc } from "@/lib/yjs-content";
 import { EditorToolbar } from "./editor-toolbar";

@@ -5,7 +5,7 @@ import {
   comments,
   profiles,
 } from "@/db/schema";
-import { eq, count, sql } from "drizzle-orm";
+import { eq, count } from "drizzle-orm";
 import type { DocumentStatus } from "@/types/document";
 
 export interface AnalyticsData {
