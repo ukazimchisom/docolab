@@ -20,6 +20,7 @@ import { EditorToolbar } from "./editor-toolbar";
 import { useYjsSync } from "@/lib/hooks/use-yjs-sync";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import type { Collaborator } from "@/types/document";
+import { useRouter } from "next/navigation";
 import { ExportMenu } from "./export-menu";
 
 interface DocumentContentProps {
@@ -40,6 +41,14 @@ export function DocumentContent({
   const [title, setTitle] = useState(initialTitle);
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
   const [isPending, startTransition] = useTransition();
+
+  const router = useRouter();
+
+  // Always-current title, readable from effects that don't re-run on every render.
+  const titleRef = useRef(initialTitle);
+  const titleTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
 
   // Created once per document, kept alive for the component's lifetime.
   const ydocRef = useRef<Y.Doc | null>(null);
@@ -64,6 +73,7 @@ export function DocumentContent({
           : {}),
       });
       setSaveStatus(result.error ? "error" : "saved");
+      if (!result.error && !saveContent) router.refresh();
     });
   }
 
@@ -97,7 +107,7 @@ export function DocumentContent({
       setSaveStatus("saving");
       timeout = setTimeout(() => {
         if (!editor) return;
-        scheduleSave(title, true);
+        scheduleSave(titleRef.current, true);
       }, 2000);
     }
 
@@ -111,8 +121,13 @@ export function DocumentContent({
 
   function handleTitleChange(value: string) {
     setTitle(value);
+    titleRef.current = value;
     setSaveStatus("saving");
-    setTimeout(() => scheduleSave(value, false), 2000);
+    clearTimeout(titleTimeoutRef.current);
+    titleTimeoutRef.current = setTimeout(
+      () => scheduleSave(titleRef.current, false),
+      2000,
+    );
   }
 
   if (!editor) return null;
@@ -148,7 +163,7 @@ export function DocumentContent({
         <div className="flex items-center gap-3">
           <SaveIndicator status={saveStatus} isPending={isPending} />
           <ExportMenu editor={editor} title={title} />
-        </div>{" "}
+        </div>
       </div>
 
       <input
