@@ -21,6 +21,7 @@ import { useYjsSync } from "@/lib/hooks/use-yjs-sync";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import type { Collaborator } from "@/types/document";
 import { useRouter } from "next/navigation";
+import { ExportMenu } from "./export-menu";
 
 interface DocumentContentProps {
   documentId: string;
@@ -71,7 +72,6 @@ export function DocumentContent({
           ? { content: encodeYDoc(ydocRef.current) }
           : {}),
       });
-      setSaveStatus(result.error ? "error" : "saved");
       setSaveStatus(result.error ? "error" : "saved");
       if (!result.error && !saveContent) router.refresh();
     });
@@ -160,8 +160,10 @@ export function DocumentContent({
             </div>
           )}
         </div>
-
-        <SaveIndicator status={saveStatus} isPending={isPending} />
+        <div className="flex items-center gap-3">
+          <SaveIndicator status={saveStatus} isPending={isPending} />
+          <ExportMenu editor={editor} title={title} />
+        </div>
       </div>
 
       <input
