@@ -22,6 +22,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import type { Collaborator } from "@/types/document";
 import { useRouter } from "next/navigation";
 import { ExportMenu } from "./export-menu";
+import { SummarizeButton } from "@/components/app/summarize-button";
 
 interface DocumentContentProps {
   documentId: string;
@@ -162,6 +163,10 @@ export function DocumentContent({
         </div>
         <div className="flex items-center gap-3">
           <SaveIndicator status={saveStatus} isPending={isPending} />
+          <SummarizeButton
+            documentId={documentId}
+            disabled={saveStatus === "saving"}
+          />
           <ExportMenu editor={editor} title={title} />
         </div>
       </div>
