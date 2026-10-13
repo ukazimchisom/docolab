@@ -49,3 +49,14 @@
 ### Open: editor autosave
 
 - Leaving the page within 2 seconds of the last keystroke cancels the pending content save, so that final edit may not reach the database. Other connected users still see it live.
+
+## AI summarization (Gemini)
+
+- **Privacy (free tier):** On Google's free Gemini tier, prompt content may be used by Google to improve its products. Before real users' private documents go through this feature, move to a paid tier (different data terms) or another provider. The dialog already tells users their text is sent to Gemini.
+- **Model pinned:** Default model is `gemini-3.5-flash-lite`, overridable with the `GEMINI_MODEL` env var. Google retires models, so a failing summary with status 404 usually means the model name needs updating.
+- **Saved version only:** Summaries use the last _saved_ content, not live editor state. The button is disabled while a save is pending, but a collaborator's very recent unsaved typing may not be included.
+- **Limits:** Only the first 30,000 characters are summarized (the dialog says so). Documents under 100 characters are refused. Images are ignored. Legacy pre-Yjs documents with no real content summarize as "too short".
+- **Rate limit:** 10 summaries per user per hour, stored in `ai_summary_requests`. Count-then-insert can overshoot by a request or two under simultaneous clicks. There is no global/daily cap beyond Gemini's own quota (a 429 shows as "service busy"). Rows are never cleaned up, so the table grows forever; a periodic delete of old rows is a future chore.
+- **Access:** Owners and any collaborator (including viewers) can summarize a document they can read.
+- **Not stored:** Summaries are generated on demand and never saved or streamed.
+- **Lint debt (pre-existing, not from this feature):** `npm run lint` reports 6 errors from newer React rules: `react-hooks/refs` in `document-content.tsx` (Yjs doc created in a ref during render) and `react-hooks/set-state-in-effect` in `theme-toggle.tsx`. Plan: fix in a separate branch (lazy `useState` initializer for the Yjs doc), not mixed into feature work.
