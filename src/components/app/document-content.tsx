@@ -47,27 +47,22 @@ export function DocumentContent({
     undefined,
   );
 
-  // Created once per document, kept alive for the component's lifetime.
-  const ydocRef = useRef<Y.Doc | null>(null);
-  if (!ydocRef.current) {
-    ydocRef.current = new Y.Doc();
-    loadIntoYDoc(ydocRef.current, initialContent);
-  }
+  // Created once, on first render, and kept for the component's lifetime.
+  // React runs this initializer only once and ignores it afterwards.
+  const [ydoc] = useState(() => {
+    const doc = new Y.Doc();
+    loadIntoYDoc(doc, initialContent);
+    return doc;
+  });
 
-  const { presentUsers, status } = useYjsSync(
-    documentId,
-    ydocRef.current,
-    currentUser,
-  );
+  const { presentUsers, status } = useYjsSync(documentId, ydoc, currentUser);
 
   function scheduleSave(nextTitle: string, saveContent: boolean) {
     setSaveStatus("saving");
     startTransition(async () => {
       const result = await updateDocument(documentId, {
         title: nextTitle,
-        ...(saveContent && ydocRef.current
-          ? { content: encodeYDoc(ydocRef.current) }
-          : {}),
+        ...(saveContent ? { content: encodeYDoc(ydoc) } : {}),
       });
       setSaveStatus(result.error ? "error" : "saved");
       if (!result.error && !saveContent) router.refresh();
@@ -84,7 +79,7 @@ export function DocumentContent({
       TipTapImage.configure({
         HTMLAttributes: { class: "rounded-lg max-w-full" },
       }),
-      Collaboration.configure({ document: ydocRef.current }),
+      Collaboration.configure({ document: ydoc }),
     ],
     editorProps: {
       attributes: {
