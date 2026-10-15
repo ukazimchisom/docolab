@@ -59,4 +59,7 @@
 - **Rate limit:** 10 summaries per user per hour, stored in `ai_summary_requests`. Count-then-insert can overshoot by a request or two under simultaneous clicks. There is no global/daily cap beyond Gemini's own quota (a 429 shows as "service busy"). Rows are never cleaned up, so the table grows forever; a periodic delete of old rows is a future chore.
 - **Access:** Owners and any collaborator (including viewers) can summarize a document they can read.
 - **Not stored:** Summaries are generated on demand and never saved or streamed.
-- **Lint debt (pre-existing, not from this feature):** `npm run lint` reports 6 errors from newer React rules: `react-hooks/refs` in `document-content.tsx` (Yjs doc created in a ref during render) and `react-hooks/set-state-in-effect` in `theme-toggle.tsx`. Plan: fix in a separate branch (lazy `useState` initializer for the Yjs doc), not mixed into feature work.
+
+## Lint (resolved)
+
+- Next 16's ESLint preset includes the new React Compiler rules. They flagged the Yjs doc-in-a-ref pattern (`react-hooks/refs`) in the editor and the mounted-effect in the theme toggle (`react-hooks/set-state-in-effect`). Fixed with a lazy `useState` initializer and `useSyncExternalStore` respectively. `npm run lint` now reports zero problems.
