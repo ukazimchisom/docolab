@@ -88,13 +88,13 @@ The project is a full-stack Next.js application with a public marketing landing 
 
 ## Screenshots
 
-| Landing page                              | Dashboard                                |
-| ----------------------------------------- | ---------------------------------------- |
-| ![Landing page](/screenshots/landing.png) | ![Dashboard](/screenshots/dashboard.png) |
+| Landing page                                    | Dashboard                                      |
+| ----------------------------------------------- | ---------------------------------------------- |
+| ![Landing page](public/screenshots/landing.png) | ![Dashboard](public/screenshots/dashboard.png) |
 
-| Editor with live collaboration     | AI summary                              |
-| ---------------------------------- | --------------------------------------- |
-| ![Editor](/screenshots/editor.png) | ![AI summary](/screenshots/summary.png) |
+| Editor with live collaboration           | AI summary                                    |
+| ---------------------------------------- | --------------------------------------------- |
+| ![Editor](public/screenshots/editor.png) | ![AI summary](public/screenshots/summary.png) |
 
 [live demo](https://docolab-zeta.vercel.app).
 
