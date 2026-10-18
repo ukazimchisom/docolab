@@ -128,7 +128,7 @@ export function ProductMockup() {
       <div className="flex items-center gap-2 border-t border-border px-4 py-2.5">
         <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
         <span className="text-xs text-muted-foreground">
-          Sarah is editing...
+          Alex is editing...
         </span>
       </div>
     </div>
