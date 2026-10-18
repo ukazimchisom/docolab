@@ -1,17 +1,26 @@
-const CURRENT_USER_FIRST_NAME = "Andy";
+"use client";
 
-function getGreeting(): string {
-  const hour = new Date().getHours();
-  if (hour < 12) return "Good morning";
-  if (hour < 18) return "Good afternoon";
-  return "Good evening";
-}
+import { useSyncExternalStore } from "react";
+import { buildGreeting } from "@/lib/greeting";
 
-export function DashboardHeader() {
+// The local hour comes from the browser's clock. There is nothing to subscribe
+// to, so subscribe is a no-op. During server rendering and hydration the hour
+// is unknown (null), which produces a neutral "Welcome back" greeting.
+const subscribe = () => () => {};
+const getHour = (): number | null => new Date().getHours();
+const getServerHour = (): number | null => null;
+
+type DashboardHeaderProps = {
+  firstName: string | null;
+};
+
+export function DashboardHeader({ firstName }: DashboardHeaderProps) {
+  const hour = useSyncExternalStore(subscribe, getHour, getServerHour);
+
   return (
     <div>
       <h1 className="text-xl font-bold text-foreground">
-        {getGreeting()}, {CURRENT_USER_FIRST_NAME}!
+        {buildGreeting(hour, firstName)}
       </h1>
       <p className="mt-1 text-xs text-muted-foreground">
         Here&apos;s what&apos;s happening with your documents.
