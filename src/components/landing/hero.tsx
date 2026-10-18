@@ -19,15 +19,15 @@ export function Hero() {
             REAL-TIME DOCUMENT COLLABORATION
           </p>
 
-          <h1 className="mt-4 text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+          <h1 className="mt-4 text-5xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl lg:text-5xl">
             Your team&apos;s ideas, together in one{" "}
             <span className="text-primary">document.</span>
           </h1>
 
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
-            Docolab helps teams write, edit, and collaborate in real
-            time—without endless email threads, version conflicts, or
-            complicated tools.
+            Docolab helps teams write, edit, and collaborate in real time
+            without endless email threads, version conflicts, or complicated
+            tools.
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
