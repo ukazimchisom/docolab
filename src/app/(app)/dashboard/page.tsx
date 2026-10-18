@@ -6,6 +6,10 @@ import { RecentDocuments } from "@/components/app/recent-documents";
 import { AllDocuments } from "@/components/app/all-documents";
 import { StorageOverview } from "@/components/app/storage-overview";
 import { ActivityFeed } from "@/components/app/activity-feed";
+import { db } from "@/db";
+import { profiles } from "@/db/schema";
+import { eq } from "drizzle-orm";
+import { getFirstName } from "@/lib/greeting";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -16,12 +20,21 @@ export default async function DashboardPage() {
   // The (app) layout already guarantees `user` exists — see Step 37 —
   // but TypeScript can't know that across files, so we guard defensively.
   const documents = user ? await getDocumentsForUser(user.id) : [];
+  const profile = user
+    ? (
+        await db
+          .select({ fullName: profiles.fullName })
+          .from(profiles)
+          .where(eq(profiles.id, user.id))
+      )[0]
+    : undefined;
+  const firstName = getFirstName(profile?.fullName);
 
   return (
     <div className="p-4 lg:p-6">
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div className="flex flex-col gap-8 lg:col-span-2">
-          <DashboardHeader />
+          <DashboardHeader firstName={firstName} />
           <QuickActions />
           <RecentDocuments documents={documents.slice(0, 4)} />
           <AllDocuments documents={documents} />
