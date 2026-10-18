@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { NAV_ITEMS } from "@/lib/mock-data";
+import { NAV_ITEMS } from "@/lib/nav-items";
 import { ICON_MAP } from "./icon-map";
 
 export function BottomTabBar() {
