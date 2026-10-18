@@ -7,7 +7,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { NAV_ITEMS } from "@/lib/mock-data";
+import { NAV_ITEMS } from "@/lib/nav-items";
 import { ICON_MAP } from "./icon-map";
 
 export function IconRail() {
